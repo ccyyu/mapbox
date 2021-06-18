@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>山海经妖怪分布图鉴</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.3.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.3.0/mapbox-gl.js"></script>
+<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+<style>
+body { margin: 0; padding: 0; }
+#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+<style>
+    #map {
+        position: absolute;
+        left: 20%;
+        top: 0;
+        bottom: 0;
+        width: 80%;
+    }
+
+    .marker {
+        display: block;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        padding: 0;
+        transform:scale(3,3);
+    }
+
+    .map-overlay {
+        position: absolute;
+        width: 20%;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        background-color: #efefef;
+        max-height: 100%;
+        overflow: hidden;
+    }
+
+    .map-overlay fieldset {
+        display: none;
+        background: #ddd;
+        border: none;
+        padding: 10px;
+        margin: 0;
+    }
+
+    .map-overlay input {
+        display: block;
+        border: none;
+        width: 100%;
+        border-radius: 3px;
+        padding: 10px;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    .map-overlay .listing {
+        overflow: auto;
+        max-height: 100%;
+    }
+
+    .map-overlay .listing > * {
+        display: block;
+        padding: 5px 10px;
+        margin: 0;
+    }
+
+    .map-overlay .listing button {
+        width:100%;
+    }
+
+    .map-overlay .listing button:hover {
+        background: #e49c9c;
+    }
+    .buttonGroup {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 120px;
+    }
+    .button{
+        width: 120px;
+        height: 40px;
+        margin-top: 10px;
+    }
+</style>
+
+<div id="map"></div>
+ 
+<div class="map-overlay">
+    <fieldset>
+        <input id="feature-filter" type="text" placeholder="search by name">
+    </fieldset>
+    <div id="feature-listing" class="listing"></div>
+</div>
+
+<div class = buttonGroup>
+    <input type="button" class="button" value="被掳妖怪" id="被掳妖怪" onclick="setusedata()" />
+</div>
+
+<script src="./animaldata.js"></script>
+<script src="./usedata.js"></script>
+<script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1IjoiYW5naWVuZXB0dW5lIiwiYSI6ImNrbWFidDZhZjFxYWMyd3J0M2V6cHBpZ3AifQ.1639xUE5cElFNaK8Q_I8wQ';
+
+
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/angieneptune/ckpi9m3dc1jdx17phppcgqbu2',
+        //style: 'mapbox://styles/angieneptune/ckq0zzlyn0izz17qiiibvxkeb',
+        center: [108.09969, 31.64680],
+        zoom: 3,
+        pitch: 30
+    });
+
+    // Add zoom and rotation controls to the map.
+    map.addControl(new mapboxgl.NavigationControl());
+
+    //var currentMarkers = [];
+
+    function AddMarker(marker){
+        var range = map.getZoom();
+        // Create a DOM element for each marker.
+        var el = document.createElement('div');
+        el.className = 'marker';
+        el.style.backgroundImage =
+        'url(https://636716.freep.cn/636716/' + marker.properties.id + '.png)';
+        //'url(images/images/'+marker.properties.id+'.png)';
+        el.style.width = range * 15 + 'px';
+        el.style.height = range * 15 + 'px';
+        el.style.backgroundSize = '100%';
+        el.style.transform = '';
+
+        var popuper = new mapboxgl.Popup({closeButton:true,closeOnClick:true,offset:25})
+            .setMaxWidth('300px')
+            .setHTML('<h1><strong>'+marker.properties.name+'</strong></h1><h6>'+marker.properties.place+'</h6><p>'+marker.properties.description1+'</p><p>'+marker.properties.description2+'</p>');
+
+        // Add markers to the map.
+        var oneMarker = new mapboxgl.Marker(el)
+            .setLngLat(marker.geometry.coordinates)
+            .setPopup(popuper)
+            .addTo(map);    
+        //currentMarkers.push(oneMarker); 
+    }
+    function AddUseMarker(marker){
+        var range = map.getZoom();
+        // Create a DOM element for each marker.
+        var ele = document.createElement('div');
+        ele.className = 'marker';
+        ele.style.backgroundImage =
+        'url(https://636716.freep.cn/636716/' + marker.properties.id + '.png)';
+        //('./images/images/'+marker.properties.id+'-'+marker.properties.name+'.png')
+        ele.style.width = range * 15 + 'px';
+        ele.style.height = range * 15 + 'px';
+        ele.style.backgroundSize = '100%';
+        ele.style.border="thin solid #FF0000";
+        ele.style.borderWidth="medium";
+
+        var popuper = new mapboxgl.Popup({closeButton:true,closeOnClick:true,offset:25})
+            .setMaxWidth('300px')
+            .setHTML('<h1><strong>'+marker.properties.name+'</strong></h1><h6>'+marker.properties.place+'</h6><p>'+marker.properties.description1+'</p><p>'+marker.properties.description2+'</p>');
+
+        // Add markers to the map.
+        var oneMarker = new mapboxgl.Marker(ele)
+            .setLngLat(marker.geometry.coordinates)
+            .setPopup(popuper)
+            .addTo(map);   
+    }
+    //添加被引用的妖怪及弧线
+    function setusedata(){
+        var a = 0;
+        usedata.features.forEach(AddUseMarker);
+        //连接相关两个妖怪之间的弧线
+        usedata.features.forEach(function(marker){
+            var origin = marker.geometry.coordinatesbefore;
+            var destination = marker.geometry.coordinates;
+            var route = {
+                'type': 'FeatureCollection',
+                'features': [
+                    {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'LineString',
+                            'coordinates': [origin, destination]
+                        }
+                    }
+                ]
+            };
+            var point = {
+                'type': 'FeatureCollection',
+                'features': [
+                    {
+                        'type': 'Feature',
+                        'properties': {},
+                        'geometry': {
+                            'type': 'Point',
+                            'coordinates': origin
+                        }
+                    }
+                ]
+            };
+            var lineDistance = turf.length(route.features[0]);
+            var arc = [];
+            var steps = 500;
+
+            for (var i = 0; i < lineDistance; i += lineDistance / steps) {
+                var segment = turf.along(route.features[0], i);
+                arc.push(segment.geometry.coordinates);
+            }
+
+            route.features[0].geometry.coordinates = arc;
+
+            var counter = 0;
+
+            var r = 'route'+a;
+            var p = 'point'+a; 
+
+                // Add a source and layer displaying a point which will be animated in a circle.
+                map.addSource(r, {
+                    'type': 'geojson',
+                    'data': route
+                });
+                map.addSource(p, {
+                    'type': 'geojson',
+                    'data': point
+                });
+                map.addLayer({
+                    'id': marker.properties.name[0],
+                    'source': r,
+                    'type': 'line',
+                    'paint': {
+                        'line-width': 2,
+                        'line-color': 'red'
+                    }
+                });
+                map.addLayer({
+                    'id': marker.properties.name[1],
+                    'source': p,
+                    'type': 'circle',
+                    'paint': {
+                        'circle-color': 'red',
+                        'circle-radius': 4,
+                        'circle-stroke-width': 2,
+                        'circle-stroke-color': '#ffffff'
+                    }
+                });
+                function animate() {
+                    var start =
+                        route.features[0].geometry.coordinates[
+                            counter >= steps ? counter - 1 : counter
+                        ];
+                    var end =
+                        route.features[0].geometry.coordinates[
+                            counter >= steps ? counter : counter + 1
+                        ];
+                    if (!start || !end) return;
+
+                    // Update point geometry to a new position based on counter denoting
+                    // the index to access the arc
+                    point.features[0].geometry.coordinates =
+                        route.features[0].geometry.coordinates[counter];
+
+                    // Calculate the bearing to ensure the icon is rotated to match the route arc
+                    // The bearing is calculated between the current point and the next point, except
+                    // at the end of the arc, which uses the previous point and the current point
+                    point.features[0].properties.bearing = turf.bearing(
+                        turf.point(start),
+                        turf.point(end)
+                    );
+
+                    // Update the source with this new data
+                    map.getSource(p).setData(point);
+
+                    // Request the next frame of animation as long as the end has not been reached
+                    if (counter < steps) {
+                        requestAnimationFrame(animate);
+                    }
+
+                    counter = counter + 1;
+                }
+
+                document
+                    .getElementById('被掳妖怪')
+                    .addEventListener('click', function () {
+                        // Set the coordinates of the original point back to origin
+                        point.features[0].geometry.coordinates = origin;
+                        // Update the source layer
+                        map.getSource(p).setData(point);
+                        // Reset the counter
+                        counter = 0;
+                        // Restart the animation
+                        animate(counter);
+                    });
+
+                animate(counter);
+                a++;
+        })
+    }
+    //remove animals been used
+    //function removeusedata(){
+
+    //}
+
+    // Holds visible animals features for filtering
+    var animals = [];
+
+    var filterEl = document.getElementById('feature-filter');
+    var listingEl = document.getElementById('feature-listing');
+
+    function renderListings(features) {
+        var empty = document.createElement('p');
+        // Clear any existing listings
+        listingEl.innerHTML = '';
+        if (features.length) {
+            features.forEach(function (feature) {
+                var prop = feature.properties;
+                var item = document.createElement('button');
+                var lng = feature.geometry.coordinates[0];
+                var lat = feature.geometry.coordinates[1];
+                item.target = '_blank';
+                item.textContent = prop.name;
+                item.addEventListener('click', function () {
+                    map.flyTo(
+                        {center:[lng,lat],
+                        zoom:14});
+                    
+                });
+                listingEl.appendChild(item);
+            });
+            // Show the filter input
+            filterEl.parentNode.style.display = 'block';
+        } else if (features.length === 0 && filterEl.value !== '') {
+            empty.textContent = 'No results found';
+            listingEl.appendChild(empty);
+        } else {
+            empty.textContent = 'Drag the map to populate results';
+            listingEl.appendChild(empty);
+ 
+            // Hide the filter input
+            filterEl.parentNode.style.display = 'none';
+ 
+            // remove features filter
+            map.setFilter('animal', ['has', 'name']);
+        }
+    }
+ 
+    function normalize(string) {
+        return string.trim().toLowerCase();
+    }
+ 
+    function getUniqueFeatures(array, comparatorProperty) {
+        var existingFeatureKeys = {};
+        // Because features come from tiled vector data, feature geometries may be split
+        // or duplicated across tile boundaries and, as a result, features may appear
+        // multiple times in query results.
+        var uniqueFeatures = array.filter(function (ob) {
+        if (existingFeatureKeys[ob.properties[comparatorProperty]]) {
+            return false;
+        } else {
+            existingFeatureKeys[ob.properties[comparatorProperty]] = true;
+            return true;
+        }
+        });
+ 
+        return uniqueFeatures;
+    }
+    var r1=3;
+    map.on('load', function () {
+
+        // Add a GeoJSON source containing place coordinates and information.
+        map.addSource('animal', {
+            'type': 'geojson',
+            'data': animaldata
+        });
+        map.addLayer({
+            'id': 'animal',
+            'source': 'animal',
+            'type': 'circle',
+            'paint': {
+                'circle-color': 'red',
+                'circle-radius': 2,
+                //'circle-stroke-width': 0,
+                //'circle-stroke-color': '#ffffff'
+            }
+        });
+
+        // Add markers to the map.
+        animaldata.features.forEach(AddMarker);
+
+        map.on('movestart', function () {
+            // reset features filter as the map starts moving
+            map.setFilter('animal',['has', 'name']);
+        });
+
+        map.on('moveend', function () {
+            var features = map.queryRenderedFeatures({ layers: ['animal'] 
+        });
+
+        map.on('zoom',function(){
+            var r2 = map.getZoom();
+            //console.log(r2-r1);
+            if(r2-r1>2){
+                $( ".marker" ).remove();
+                animaldata.features.forEach(AddMarker);
+                //usedata.features.forEach(AddUseMarker);
+                //r1=Math.floor(r2);
+                r1=r2;
+            }else if(r1-r2>2){
+                $( ".marker" ).remove();
+                animaldata.features.forEach(AddMarker);
+                //usedata.features.forEach(AddUseMarker);
+                //r1=Math.ceil(r2);
+                r1=r2;
+            }else{
+                return;
+            }
+        });
+        
+
+        if (features) {
+            var uniqueFeatures = getUniqueFeatures(features, 'id');
+            // Populate features for the listing overlay.
+            renderListings(uniqueFeatures);
+ 
+            // Clear the input container
+            filterEl.value = '';
+ 
+            // Store the current features in sn `airports` variable to
+            // later use for filtering on `keyup`.
+            animals = uniqueFeatures;
+        }
+        });
+ 
+        map.on('mousemove', 'animal', function (e) {
+            // Change the cursor style as a UI indicator.
+            map.getCanvas().style.cursor = 'pointer';
+ 
+            // Populate the popup and set its coordinates based on the feature.
+            var feature = e.features[0];
+            });
+ 
+        map.on('mouseleave', 'animal', function () {
+            map.getCanvas().style.cursor = '';
+        });
+
+        filterEl.addEventListener('keyup', function (e) {
+            var value = normalize(e.target.value);
+        
+            // Filter visible features that don't match the input value.
+            var filtered = animals.filter(function (feature) {
+            var name = normalize(feature.properties.name);
+            //var code = normalize(feature.properties.id);
+            return name.indexOf(value) > -1 //|| code.indexOf(value) > -1;
+            });
+ 
+            // Populate the sidebar with filtered results
+            renderListings(filtered);
+ 
+            // Set the filter to populate features into the layer.
+            if (filtered.length) {
+                map.setFilter('animal', [
+                    'match',
+                    ['get', 'name'],
+                    filtered.map(function (feature) {
+                        return feature.properties.name;
+                    }),
+                    true,
+                    false
+                ]);
+            }
+        });
+ 
+        // Call this function on initialization
+        // passing an empty array to render an empty state
+        renderListings([]);
+
+    });
+
+
+</script>
+
+</body>
+</html>
