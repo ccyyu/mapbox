@@ -1,2 +1,2 @@
 # mapbox 
-网页链接：https://github.com/ccyyu/mapbox.git
+网页链接：https://ccyyu.github.io/mapbox/
