@@ -16,10 +16,10 @@ body { margin: 0; padding: 0; }
 <style>
     #map {
         position: absolute;
-        left: 20%;
+        left: 15%;
         top: 0;
         bottom: 0;
-        width: 80%;
+        width: 85%;
     }
 
     .marker {
@@ -28,12 +28,11 @@ body { margin: 0; padding: 0; }
         border-radius: 50%;
         cursor: pointer;
         padding: 0;
-        transform:scale(3,3);
     }
 
     .map-overlay {
         position: absolute;
-        width: 20%;
+        width: 15%;
         top: 0;
         bottom: 0;
         left: 0;
@@ -102,7 +101,9 @@ body { margin: 0; padding: 0; }
 </div>
 
 <div class = buttonGroup>
+    <input type="button" class="button" value="全局显示" id="全局显示" onclick="locate()"/>
     <input type="button" class="button" value="被掳妖怪" id="被掳妖怪" onclick="setusedata()" />
+    <input type="button" class="button" value="清除" id="清除" onclick="removeusedata()" />
 </div>
 
 <script src="./animaldata.js"></script>
@@ -118,13 +119,20 @@ body { margin: 0; padding: 0; }
         //style: 'mapbox://styles/angieneptune/ckq0zzlyn0izz17qiiibvxkeb',
         center: [108.09969, 31.64680],
         zoom: 3,
-        pitch: 30
+        pitch: 30,
+        doubleClickZoom:false
     });
 
+    function locate(){
+        map.flyTo({
+            center: [108.09969, 31.64680],
+            zoom: 3
+        })
+    }
     // Add zoom and rotation controls to the map.
     map.addControl(new mapboxgl.NavigationControl());
 
-    //var currentMarkers = [];
+    var currentMarkers = [];
 
     function AddMarker(marker){
         var range = map.getZoom();
@@ -132,8 +140,8 @@ body { margin: 0; padding: 0; }
         var el = document.createElement('div');
         el.className = 'marker';
         el.style.backgroundImage =
-        //'url(https://636716.freep.cn/636716/' + marker.properties.id + '.png)';
-        'url(images/'+marker.properties.id+'.png)';
+        'url(https://636716.freep.cn/636716/' + marker.properties.id + '.png)';
+        //'url(images/'+marker.properties.id+'.png)';
         el.style.width = range * 15 + 'px';
         el.style.height = range * 15 + 'px';
         el.style.backgroundSize = '100%';
@@ -154,12 +162,12 @@ body { margin: 0; padding: 0; }
         var range = map.getZoom();
         // Create a DOM element for each marker.
         var ele = document.createElement('div');
-        ele.className = 'marker';
+        ele.className = 'marker1';
         ele.style.backgroundImage =
         'url(https://636716.freep.cn/636716/' + marker.properties.id + '.png)';
-        //('./images/'+marker.properties.id+'-'+marker.properties.name+'.png')
-        ele.style.width = range * 15 + 'px';
-        ele.style.height = range * 15 + 'px';
+        //'url(images/'+marker.properties.id+'.png)';
+        ele.style.width = range * 13 + 'px';
+        ele.style.height = range * 13 + 'px';
         ele.style.backgroundSize = '100%';
         ele.style.border="thin solid #FF0000";
         ele.style.borderWidth="medium";
@@ -172,7 +180,8 @@ body { margin: 0; padding: 0; }
         var oneMarker = new mapboxgl.Marker(ele)
             .setLngLat(marker.geometry.coordinates)
             .setPopup(popuper)
-            .addTo(map);   
+            .addTo(map);
+        currentMarkers.push(oneMarker);   
     }
     //添加被引用的妖怪及弧线
     function setusedata(){
@@ -305,9 +314,29 @@ body { margin: 0; padding: 0; }
         })
     }
     //remove animals been used
-    //function removeusedata(){
+    function removeusedata(){
+        for(var i=0;i<7;i++){
+            var r2 = usedata.features[i].properties.name[0];
+            var p2 = usedata.features[i].properties.name[1];
+            var r1 = 'route'+i;
+            var p1 = 'point'+i;
+            if(map.getLayer(r2)){
+                map.removeLayer(r2);
+                map.removeSource(r1);
+            };
+            if(map.getLayer(p2)){
+                map.removeLayer(p2);
+                map.removeSource(p1);
+            };
+        }
 
-    //}
+        for(var j=0;j<7;j++){
+            if(currentMarkers[j]!=null){
+                currentMarkers[j].remove();
+            }
+        }
+        currentMarkers=[];
+    }
 
     // Holds visible animals features for filtering
     var animals = [];
@@ -410,13 +439,11 @@ body { margin: 0; padding: 0; }
             if(r2-r1>2){
                 $( ".marker" ).remove();
                 animaldata.features.forEach(AddMarker);
-                //usedata.features.forEach(AddUseMarker);
                 //r1=Math.floor(r2);
                 r1=r2;
             }else if(r1-r2>2){
                 $( ".marker" ).remove();
                 animaldata.features.forEach(AddMarker);
-                //usedata.features.forEach(AddUseMarker);
                 //r1=Math.ceil(r2);
                 r1=r2;
             }else{
