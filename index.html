@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>山海经异兽分布图鉴</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  <link rel="stylesheet" href="./style.css">
+
+
+</head>
+<style type="text/css">
+  audio{
+          display: none;
+      }
+</style>
+<body>
+<!-- partial:index.partial.html -->
+<div class="boxes">
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/fengmian.png)"><span>1</span><img src="https://636716.freep.cn/636716/fengmian.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/1.png)"><span>2</span><img src="https://636716.freep.cn/636716/1.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/2.png)"><span>3</span><img src="https://636716.freep.cn/636716/2.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/3.png)"><span>4</span><img src="https://636716.freep.cn/636716/3.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/4.png)"><span>5</span><img src="https://636716.freep.cn/636716/4.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/5.png)"><span>6</span><img src="https://636716.freep.cn/636716/5.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/6.png)"><span>7</span><img src="https://636716.freep.cn/636716/6.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/7.png)"><span>8</span><img src="https://636716.freep.cn/636716/7.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/8.png)"><span>9</span><img src="https://636716.freep.cn/636716/8.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/9.png)"><span>10</span><img src="https://636716.freep.cn/636716/9.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/10.png)"><span>11</span><img src="https://636716.freep.cn/636716/10.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/11.png)"><span>12</span><img src="https://636716.freep.cn/636716/11.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/12.png)"><span>13</span><img src="https://636716.freep.cn/636716/12.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/13.png)"><span>14</span><img src="https://636716.freep.cn/636716/13.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/14.png)"><span>15</span><img src="https://636716.freep.cn/636716/14.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/15.png)"><span>16</span><img src="https://636716.freep.cn/636716/15.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/16.png)"><span>17</span><img src="https://636716.freep.cn/636716/16.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/17.png)"><span>18</span><img src="https://636716.freep.cn/636716/17.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/18.png)"><span>19</span><img src="https://636716.freep.cn/636716/18.png"/></div>
+  <div class="box" style="--src: url(https://636716.freep.cn/636716/19.png)"><span>20</span><img src="https://636716.freep.cn/636716/19.png"/></div>
+
+<!--
+  <EMBED src="http://music.163.com/song/media/outer/url?id=4878060.mp3" 
+  autostart="true" loop="true" volume='20'>
+  <bgsound src="http://music.163.com/song/media/outer/url?id=4878060.mp3" loop="-1"></bgsound>
+  <audio  controls autoplay start="60"  loop="loop" preload="auto"
+src="http://music.163.com/song/media/outer/url?id=4878060.mp3">
+
+</audio>-->
+<audio  autoplay="autoplay" id="m1" controls="controls"loop="loop" preload="auto"
+  src="http://music.163.com/song/media/outer/url?id=4878060.mp3">
+
+</audio>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript">
+  $(function () {
+    //js获取某个mp3音频文件的播放时
+    duration();
+    getVideo();
+    console.log("转化为多少秒=》》");
+  })
+
+  // 音频加载完成后的一系列操作
+  function duration() {
+    var myVid = document.getElementById("m1");
+    console.log("duration ", myVid);
+    if (myVid != null) {
+      var duration;
+      myVid.load(); //方法重新加载音频/视频元素
+      // https://www.w3school.com.cn/tags/av_prop_currenttime.asp
+      // currentTime 属性设置或返回音频/视频播放的当前位置（以秒计）。
+      // 当设置该属性时，播放会跳跃到指定的位置。
+      myVid.currentTime = 75; //默认指定音频默认从20s的时候开始播放（默认时间为s）
+      
+      
+    }
+  }
+  function getVideo(){
+    document.getElementById("m1").volume =0.01;
+}
+</script>
+
+  <div class="controls">
+    <!--<button class="next"><span>Previous album</span>
+      <svg viewBox="0 0 448 512" width="100" title="Previous Album">
+        <path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"></path>
+      </svg>
+    </button>
+    <button class="prev"><span>Next album</span>
+      <svg viewBox="0 0 448 512" width="100" title="Next Album">
+        <path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"></path>
+      </svg>
+    </button>
+  </button>
+  <button class="controls"><span>map</span>
+    <input type="button" class="button" value="map" onclick="function tz()" />
+  </button>
+  </div>!-->
+  <div class="buttonGroup">
+    <input type="button" class="button" value="开启奇妙之旅" onclick="tz()" />
+</div> 
+
+  <script>
+ 
+    function tz(){
+     
+    window.location.href="shanhaijing/shanhaijing(升级版).html";
+     
+    }
+     
+    </script>
+    
+</div>
+<svg class="scroll-icon" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M20 6H23L19 2L15 6H18V18H15L19 22L23 18H20V6M9 3.09C11.83 3.57 14 6.04 14 9H9V3.09M14 11V15C14 18.3 11.3 21 8 21S2 18.3 2 15V11H14M7 9H2C2 6.04 4.17 3.57 7 3.09V9Z"></path>
+</svg>
+<div class="drag-proxy"></div>
+<!-- partial -->
+<script type="module" src="./script.js"></script>
+<!--<script>
+  window.onload=function () {
+                var music = document.getElementById("vd");//获取ID  
+                    console.log(music);
+                    console.log(music.paused);
+                if (music.paused) { //判读是否播放  
+                    music.paused=false;
+                    music.play(); //没有就播放 
+                }  
+                
+            }
+    
+   // setInterval("toggleSound()",1);
+  </script>-->
+</body>
+
+
+</html>
