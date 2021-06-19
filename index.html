@@ -436,12 +436,12 @@ body { margin: 0; padding: 0; }
         map.on('zoom',function(){
             var r2 = map.getZoom();
             //console.log(r2-r1);
-            if(r2-r1>2){
+            if(r2-r1>1.5){
                 $( ".marker" ).remove();
                 animaldata.features.forEach(AddMarker);
                 //r1=Math.floor(r2);
                 r1=r2;
-            }else if(r1-r2>2){
+            }else if(r1-r2>1.5){
                 $( ".marker" ).remove();
                 animaldata.features.forEach(AddMarker);
                 //r1=Math.ceil(r2);
